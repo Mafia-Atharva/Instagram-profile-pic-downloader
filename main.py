@@ -6,10 +6,6 @@ from bs4 import BeautifulSoup
 from PIL import Image, ImageTk
 
 def download_pic(username):
-  
-    # if username=="":
-    #     status.config(text="Please enter a username.")
-    #     return
 
     file_name = f"{username}_pfp.jpg"
     #folder to save downloaded images
