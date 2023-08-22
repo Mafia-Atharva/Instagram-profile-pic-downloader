@@ -7,11 +7,11 @@ from PIL import Image, ImageTk
 
 def download_pic(username):
   
-    if username=="":
-        file_name="instagram.jpg"
-    else:
-        file_name = f"{username}_pfp.jpg"
+    # if username=="":
+    #     status.config(text="Please enter a username.")
+    #     return
 
+    file_name = f"{username}_pfp.jpg"
     #folder to save downloaded images
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
     destination_folder = os.path.join(script_dir, "downloaded images")
@@ -32,16 +32,16 @@ def download_pic(username):
     
     with open(save_location,'wb') as f:
         f.write(pfp_response.content)
-        if username=="":
-            print(f"Profile picture downloaded: Instagram")
-        else:
-            print(f"Profile picture downloaded: {username}")
+        print(f"Profile picture downloaded: {username}")
         
     return save_location
 
 
 def image_gui():
     username=user_input.get()
+    if username=="":
+        status.config(text="Please enter a username!")
+        return
 
     try:
         image_location = download_pic(username)
@@ -49,7 +49,7 @@ def image_gui():
         photo = ImageTk.PhotoImage(image)
         label.config(image=photo)
         label.image = photo
-        status.config(text="Profile picture downloaded successfully!")
+        status.config(text=f"Profile picture  :  {username}")
 
 
     except:
@@ -57,34 +57,38 @@ def image_gui():
 
             
 #GUI Window 
-root = tk.Tk()
-root.title("INSTAGRAM PROFILE PIC DOWNLOADER")
-root.geometry("500x500")
-root.resizable(False,False)
 
-user_input = ttk.Entry(root,width=79)
-user_input.grid(row=0,column=0,padx=10)
+if __name__=="__main__":
+    root = tk.Tk()
+    root.title("INSTAGRAM PROFILE PIC DOWNLOADER")
+    root.geometry("500x500")
+    root.resizable(True,True)
 
-style=ttk.Style()
-style.configure('.TButton', font =('MS Sans Serif', 10, 'bold'),foreground = 'green')
+    user_input = ttk.Entry(root,width=79)
+    user_input.grid(row=0,column=0,padx=10)
+    user_input.insert(0,"Enter an instagram username")
+    user_input.bind("<FocusIn>", lambda args: user_input.delete('0', 'end'))
 
-button = ttk.Button(root, text="Download Profile Picture", style=".TButton", command=image_gui)
-button.grid(row=1,column=0,padx=10,pady=10)
+    style=ttk.Style()
+    style.configure('.TButton', font =('MS Sans Serif', 10, 'bold'),foreground = 'green')
 
-label = ttk.Label(root, text="Downloaded Image will appear below")
-label.grid(row=3,column=0,padx=10,pady=10)
+    button = ttk.Button(root, text="Download Profile Picture", style=".TButton", command=image_gui)
+    button.grid(row=1,column=0,padx=10,pady=10)
 
-status = ttk.Label(root, text="")
-status.grid(row=4,column=0,padx=10,pady=10)
+    label = ttk.Label(root, text="Downloaded Image will appear here")
+    label.grid(row=3,column=0,padx=10,pady=10)
 
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
+    status = ttk.Label(root, text="")
+    status.grid(row=5,column=0,padx=10,pady=10)
 
-window_height = 347
-window_width = 500
-x_coordinate = int((screen_width/2) - (window_width/2))
-y_coordinate = int((screen_height/2) - (window_height/2))
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
 
-root.geometry("{}x{}+{}+{}".format(window_width, window_height, x_coordinate, y_coordinate))
+    window_height = 347
+    window_width = 500
+    x_coordinate = int((screen_width/2) - (window_width/2))
+    y_coordinate = int((screen_height/2) - (window_height/2))
 
-root.mainloop()
+    root.geometry("{}x{}+{}+{}".format(window_width, window_height, x_coordinate, y_coordinate))
+
+    root.mainloop()
