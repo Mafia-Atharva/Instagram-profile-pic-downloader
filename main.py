@@ -8,12 +8,6 @@ from PIL import Image, ImageTk
 def download_pic(username):
 
     file_name = f"{username}_pfp.jpg"
-    #folder to save downloaded images
-    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
-    destination_folder = os.path.join(script_dir, "downloaded images")
-    if not os.path.exists(destination_folder):
-        os.makedirs(destination_folder)
-    save_location = os.path.join(destination_folder, file_name)
 
     #send request to instagram's profile page of user
     profile_link = f"https://www.instagram.com/{username}/"
@@ -25,17 +19,25 @@ def download_pic(username):
     
     pfp_url = tag['content']
     pfp_response =  requests.get(pfp_url)
+
+    if(pfp_response.ok):
+        #folder to save downloaded images
+        script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
+        destination_folder = os.path.join(script_dir, "downloaded images")
+        if not os.path.exists(destination_folder):
+            os.makedirs(destination_folder)
+        save_location = os.path.join(destination_folder, file_name)
     
-    with open(save_location,'wb') as f:
-        f.write(pfp_response.content)
-        print(f"Profile picture downloaded: {username}")
+        with open(save_location,'wb') as f:
+            f.write(pfp_response.content)
+            print(f"Profile picture downloaded: {username}")
         
     return save_location
 
 
 def image_gui():
     username=user_input.get()
-    if username=="":
+    if username=="Enter an instagram username" or username=="":
         status.config(text="Please enter a username!")
         return
 
@@ -49,7 +51,7 @@ def image_gui():
 
 
     except:
-        status.config(text="Failed to download profile picture. Is the username correct?")
+        status.config(text="Failed to download profile picture.Incorrect username or user does not have a profile picture")
 
             
 #GUI Window 
